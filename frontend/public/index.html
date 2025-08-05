@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>HobbyMatch AI</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          sans-serif;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        color: #333;
+      }
+
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 2rem;
+      }
+
+      .header {
+        text-align: center;
+        color: white;
+        margin-bottom: 3rem;
+      }
+
+      .header h1 {
+        font-size: 3rem;
+        margin-bottom: 0.5rem;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+      }
+
+      .header p {
+        font-size: 1.2rem;
+        opacity: 0.9;
+      }
+
+      .main-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 2rem;
+        margin-bottom: 2rem;
+      }
+
+      @media (max-width: 768px) {
+        .main-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      .card {
+        background: white;
+        border-radius: 12px;
+        padding: 2rem;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease;
+      }
+
+      .card:hover {
+        transform: translateY(-5px);
+      }
+
+      .card h2 {
+        margin-bottom: 1.5rem;
+        color: #667eea;
+      }
+
+      .form-group {
+        margin-bottom: 1.5rem;
+      }
+
+      .form-group label {
+        display: block;
+        margin-bottom: 0.5rem;
+        font-weight: 600;
+        color: #555;
+      }
+
+      .form-group input,
+      .form-group select {
+        width: 100%;
+        padding: 0.75rem;
+        border: 2px solid #e1e8ed;
+        border-radius: 8px;
+        font-size: 1rem;
+        transition: border-color 0.3s ease;
+      }
+
+      .form-group input:focus,
+      .form-group select:focus {
+        outline: none;
+        border-color: #667eea;
+      }
+
+      .interests-input {
+        display: flex;
+        gap: 0.5rem;
+        margin-bottom: 0.5rem;
+      }
+
+      .interests-input input {
+        flex: 1;
+      }
+
+      .interests-input button {
+        padding: 0.75rem 1rem;
+        background: #667eea;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: background 0.3s ease;
+      }
+
+      .interests-input button:hover {
+        background: #5a67d8;
+      }
+
+      .interest-tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        margin-top: 0.5rem;
+      }
+
+      .interest-tag {
+        background: #e1e8ed;
+        padding: 0.5rem 1rem;
+        border-radius: 20px;
+        font-size: 0.9rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      .interest-tag button {
+        background: none;
+        border: none;
+        color: #999;
+        cursor: pointer;
+        font-size: 1.2rem;
+        padding: 0;
+        width: 20px;
+        height: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .interest-tag button:hover {
+        color: #e53e3e;
+      }
+
+      .submit-btn {
+        width: 100%;
+        padding: 1rem;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-size: 1.1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: opacity 0.3s ease;
+      }
+
+      .submit-btn:hover {
+        opacity: 0.9;
+      }
+
+      .submit-btn:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+      }
+
+      .search-section {
+        background: white;
+        border-radius: 12px;
+        padding: 2rem;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+      }
+
+      .search-box {
+        display: flex;
+        gap: 1rem;
+        margin-bottom: 2rem;
+      }
+
+      .search-box input {
+        flex: 1;
+        padding: 0.75rem;
+        border: 2px solid #e1e8ed;
+        border-radius: 8px;
+        font-size: 1rem;
+      }
+
+      .search-box button {
+        padding: 0.75rem 2rem;
+        background: #667eea;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        font-weight: 600;
+        transition: background 0.3s ease;
+      }
+
+      .search-box button:hover {
+        background: #5a67d8;
+      }
+
+      .user-list {
+        display: grid;
+        gap: 1rem;
+      }
+
+      .user-card {
+        background: #f7fafc;
+        padding: 1.5rem;
+        border-radius: 8px;
+        border: 1px solid #e1e8ed;
+        transition: all 0.3s ease;
+      }
+
+      .user-card:hover {
+        border-color: #667eea;
+        transform: translateX(5px);
+      }
+
+      .user-card h3 {
+        color: #667eea;
+        margin-bottom: 0.5rem;
+      }
+
+      .user-card p {
+        color: #666;
+        margin-bottom: 0.25rem;
+      }
+
+      .user-card .date {
+        font-size: 0.9rem;
+        color: #999;
+      }
+
+      .message {
+        padding: 1rem;
+        border-radius: 8px;
+        margin-bottom: 1rem;
+        text-align: center;
+      }
+
+      .message.success {
+        background: #c6f6d5;
+        color: #276749;
+        border: 1px solid #9ae6b4;
+      }
+
+      .message.error {
+        background: #fed7d7;
+        color: #9b2c2c;
+        border: 1px solid #fc8181;
+      }
+
+      .loading {
+        text-align: center;
+        padding: 2rem;
+        color: #666;
+      }
+
+      .api-info {
+        background: #f7fafc;
+        border-radius: 8px;
+        padding: 1rem;
+        margin-bottom: 1rem;
+        font-size: 0.9rem;
+        color: #666;
+      }
+
+      .api-info code {
+        background: #e1e8ed;
+        padding: 0.25rem 0.5rem;
+        border-radius: 4px;
+        font-family: monospace;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="header">
+        <h1>🎯 HobbyMatch AI</h1>
+        <p>Discover your perfect hobby with AI-powered recommendations</p>
+      </div>
+
+      <div class="api-info">
+        ⚠️ <strong>Setup Required:</strong> Update the <code>API_URL</code> in
+        the script with your API Gateway URL
+      </div>
+
+      <div class="main-grid">
+        <!-- Create User Form -->
+        <div class="card">
+          <h2>Create Profile</h2>
+          <form id="createUserForm">
+            <div class="form-group">
+              <label for="name">Name</label>
+              <input type="text" id="name" required placeholder="John Doe" />
+            </div>
+
+            <div class="form-group">
+              <label for="email">Email</label>
+              <input
+                type="email"
+                id="email"
+                required
+                placeholder="john@example.com"
+              />
+            </div>
+
+            <div class="form-group">
+              <label>Interests</label>
+              <div class="interests-input">
+                <input
+                  type="text"
+                  id="interestInput"
+                  placeholder="Add an interest"
+                />
+                <button type="button" onclick="addInterest()">Add</button>
+              </div>
+              <div class="interest-tags" id="interestTags"></div>
+            </div>
+
+            <div class="form-group">
+              <label for="timeAvailable">Time Available</label>
+              <select id="timeAvailable">
+                <option value="flexible">Flexible</option>
+                <option value="weekends">Weekends</option>
+                <option value="evenings">Evenings</option>
+                <option value="mornings">Mornings</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="budget">Budget</label>
+              <select id="budget">
+                <option value="low">Low ($0-50)</option>
+                <option value="medium">Medium ($50-200)</option>
+                <option value="high">High ($200+)</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="skillLevel">Skill Level</label>
+              <select id="skillLevel">
+                <option value="beginner">Beginner</option>
+                <option value="intermediate">Intermediate</option>
+                <option value="advanced">Advanced</option>
+              </select>
+            </div>
+
+            <button type="submit" class="submit-btn">Create Profile</button>
+          </form>
+          <div id="createMessage"></div>
+        </div>
+
+        <!-- Search Users by Interest -->
+        <div class="card">
+          <h2>Find Hobby Buddies</h2>
+          <div class="search-box">
+            <input
+              type="text"
+              id="searchInterest"
+              placeholder="Enter interest (e.g., photography)"
+            />
+            <button onclick="searchUsers()">Search</button>
+          </div>
+          <div id="searchMessage"></div>
+          <div id="userList" class="user-list"></div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // 🚨 UPDATE THIS WITH YOUR API GATEWAY URL
+      const API_URL =
+        "https://5sddunfavk.execute-api.us-east-1.amazonaws.com/dev";
+
+      let interests = [];
+
+      // Add interest to the list
+      function addInterest() {
+        const input = document.getElementById("interestInput");
+        const interest = input.value.trim();
+
+        if (interest && !interests.includes(interest.toLowerCase())) {
+          interests.push(interest.toLowerCase());
+          renderInterests();
+          input.value = "";
+        }
+      }
+
+      // Remove interest from the list
+      function removeInterest(interest) {
+        interests = interests.filter((i) => i !== interest);
+        renderInterests();
+      }
+
+      // Render interest tags
+      function renderInterests() {
+        const container = document.getElementById("interestTags");
+        container.innerHTML = interests
+          .map(
+            (interest) => `
+                <div class="interest-tag">
+                    ${interest}
+                    <button type="button" onclick="removeInterest('${interest}')">×</button>
+                </div>
+            `
+          )
+          .join("");
+      }
+
+      // Handle Enter key in interest input
+      document
+        .getElementById("interestInput")
+        .addEventListener("keypress", (e) => {
+          if (e.key === "Enter") {
+            e.preventDefault();
+            addInterest();
+          }
+        });
+
+      // Create user form submission
+      document
+        .getElementById("createUserForm")
+        .addEventListener("submit", async (e) => {
+          e.preventDefault();
+
+          const submitBtn = e.target.querySelector(".submit-btn");
+          const messageDiv = document.getElementById("createMessage");
+
+          submitBtn.disabled = true;
+          submitBtn.textContent = "Creating...";
+
+          const formData = {
+            name: document.getElementById("name").value,
+            email: document.getElementById("email").value,
+            preferences: {
+              interests: interests,
+              timeAvailable: document.getElementById("timeAvailable").value,
+              budget: document.getElementById("budget").value,
+              skillLevel: document.getElementById("skillLevel").value,
+            },
+          };
+
+          try {
+            const response = await fetch(`${API_URL}/users`, {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify(formData),
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+              messageDiv.className = "message success";
+              messageDiv.textContent = `✅ Profile created successfully! User ID: ${data.userId}`;
+
+              // Reset form
+              e.target.reset();
+              interests = [];
+              renderInterests();
+            } else {
+              messageDiv.className = "message error";
+              messageDiv.textContent = `❌ Error: ${data.message}`;
+            }
+          } catch (error) {
+            messageDiv.className = "message error";
+            messageDiv.textContent = `❌ Error: ${error.message}`;
+          } finally {
+            submitBtn.disabled = false;
+            submitBtn.textContent = "Create Profile";
+          }
+        });
+
+      // Search users by interest
+      async function searchUsers() {
+        const interest = document.getElementById("searchInterest").value.trim();
+        const messageDiv = document.getElementById("searchMessage");
+        const userListDiv = document.getElementById("userList");
+
+        if (!interest) {
+          messageDiv.className = "message error";
+          messageDiv.textContent = "Please enter an interest to search";
+          return;
+        }
+
+        userListDiv.innerHTML = '<div class="loading">Searching...</div>';
+        messageDiv.textContent = "";
+
+        try {
+          const response = await fetch(
+            `${API_URL}/interests/${interest}/users`
+          );
+          const data = await response.json();
+
+          if (response.ok) {
+            if (data.users && data.users.length > 0) {
+              userListDiv.innerHTML = data.users
+                .map(
+                  (user) => `
+                            <div class="user-card">
+                                <h3>${user.userName}</h3>
+                                <p>📧 ${user.userEmail}</p>
+                                <p class="date">🕒 Joined: ${new Date(
+                                  user.addedAt
+                                ).toLocaleDateString()}</p>
+                            </div>
+                        `
+                )
+                .join("");
+
+              messageDiv.className = "message success";
+              messageDiv.textContent = `Found ${data.users.length} user(s) interested in ${interest}`;
+            } else {
+              userListDiv.innerHTML =
+                '<p style="text-align: center; color: #666;">No users found with this interest yet.</p>';
+            }
+          } else {
+            messageDiv.className = "message error";
+            messageDiv.textContent = `❌ Error: ${data.message}`;
+            userListDiv.innerHTML = "";
+          }
+        } catch (error) {
+          messageDiv.className = "message error";
+          messageDiv.textContent = `❌ Error: ${error.message}`;
+          userListDiv.innerHTML = "";
+        }
+      }
+
+      // Handle Enter key in search input
+      document
+        .getElementById("searchInterest")
+        .addEventListener("keypress", (e) => {
+          if (e.key === "Enter") {
+            searchUsers();
+          }
+        });
+    </script>
+  </body>
+</html>
