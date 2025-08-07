@@ -507,24 +507,30 @@
         messageDiv.textContent = "";
 
         try {
+          console.log("Searching for:", interest); // ADD THIS
+
           const response = await fetch(
             `${API_URL}/interests/${interest}/users`
           );
+          console.log("Response status:", response.status); // ADD THIS
+
           const data = await response.json();
+          console.log("Response data:", data); // ADD THIS
 
           if (response.ok) {
             if (data.users && data.users.length > 0) {
+              // FIXED THIS LINE
               userListDiv.innerHTML = data.users
                 .map(
                   (user) => `
-                            <div class="user-card">
-                                <h3>${user.userName}</h3>
-                                <p>📧 ${user.userEmail}</p>
-                                <p class="date">🕒 Joined: ${new Date(
-                                  user.addedAt
-                                ).toLocaleDateString()}</p>
-                            </div>
-                        `
+                        <div class="user-card">
+                            <h3>${user.userName}</h3>
+                            <p>📧 ${user.userEmail}</p>
+                            <p class="date">🕒 Joined: ${new Date(
+                              user.addedAt
+                            ).toLocaleDateString()}</p>
+                        </div>
+                    `
                 )
                 .join("");
 
@@ -540,6 +546,7 @@
             userListDiv.innerHTML = "";
           }
         } catch (error) {
+          console.error("Error details:", error); // ADD THIS
           messageDiv.className = "message error";
           messageDiv.textContent = `❌ Error: ${error.message}`;
           userListDiv.innerHTML = "";
