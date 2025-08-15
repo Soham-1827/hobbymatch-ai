@@ -6,7 +6,7 @@ export async function handler(event) {
         statusCode: 200,
         headers: {
             'Content-Type': 'application/json',
-            'Access-Control-Allow-Origin': '*'  // This prevents CORS (Cross-Origin Resource Sharing) errors
+            'Access-Control-Allow-Origin': '*'  // This prevents CORS (Cross-Origin Resource Sharing) errors, Enabled it in AWS API gateway
         },
         body: JSON.stringify({
             message: 'Welcome to HobbyMatch AI!',
