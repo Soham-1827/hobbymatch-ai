@@ -9,6 +9,7 @@ AI-powered hobby recommendation system built with AWS serverless architecture.
 - AI: AWS Bedrock
 - Auth: Cognito
 
+Currently working on , implementing AI functionality
 ## Project Structure
 - `/frontend` - React application
 - `/backend` - Lambda functions
