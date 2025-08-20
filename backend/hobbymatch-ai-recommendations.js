@@ -17,7 +17,6 @@ function callOpenAI(prompt, apiKey) {
       ],
       response_format: { type: "json_object" }, // ask for strict JSON
       temperature: 0.7,
-      max_output_tokens: 500,
     });
 
     const options = {
@@ -123,17 +122,20 @@ exports.handler = async (event) => {
 
     // Call OpenAI
     const aiResponse = await callOpenAI(prompt, apiKey);
-
+    console.log("AI response:", JSON.stringify(aiResponse, null, 2));
     // Parse the AI response
     let recommendations = [];
     try {
-      const content =
-        aiResponse.output_text ??
-        aiResponse.output?.[0]?.content?.[0]?.text ??
-        "";
+      const content = aiResponse.choices[0].message.content;
+      console.log("AI Content:", content);
       recommendations = JSON.parse(content);
+      console.log(
+        "Parsed recommendations:",
+        JSON.stringify(recommendations, null, 2)
+      );
     } catch (parseError) {
       console.error("Error parsing AI response:", parseError);
+      console.error("Full AI response:", JSON.stringify(aiResponse, null, 2));
       // Fallback recommendations
       recommendations = [
         {
@@ -147,7 +149,7 @@ exports.handler = async (event) => {
       ];
     }
 
-    return {
+    const response = {
       statusCode: 200,
       headers: {
         "Content-Type": "application/json",
@@ -161,6 +163,8 @@ exports.handler = async (event) => {
         },
       }),
     };
+    console.log("Response:", JSON.stringify(response, null, 2));
+    return response;
   } catch (error) {
     console.error("Error:", error);
     return {
